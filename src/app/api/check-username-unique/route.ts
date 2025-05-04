@@ -2,8 +2,6 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 import {z} from 'zod'
 import { userNameValidation } from "@/schemas/signupSchema";
-import { error } from "console";
-import { SearchParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 
 const UsernameQuerySchema = z.object({
     username: userNameValidation
