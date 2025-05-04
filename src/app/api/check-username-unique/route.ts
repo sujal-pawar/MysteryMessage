@@ -2,12 +2,15 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 import {z} from 'zod'
 import { userNameValidation } from "@/schemas/signupSchema";
+import { error } from "console";
+import { SearchParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 
 const UsernameQuerySchema = z.object({
     username: userNameValidation
 })
 
 export async function GET(request:Request){
+
     await dbConnect()
 
     try{    
@@ -41,7 +44,7 @@ export async function GET(request:Request){
             }
             return Response.json({
                 success:true,
-                message:'Username is Unique'
+                message:'Username is unique'
             },{status:200})
         }catch(error){
         console.error(" Error checking username ",error)
