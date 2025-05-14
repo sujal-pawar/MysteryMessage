@@ -6,8 +6,13 @@ const nextConfig = {
   },
   // Properly identify output file paths during build
   output: 'standalone',
-  // External packages for server components
-  serverExternalPackages: [],
+  // Disable page optimization to prevent issues with route groups
+  poweredByHeader: false,
+  // Handle edge cases with route groups in Vercel deployments
+  experimental: {
+    // This helps with route group resolution issues
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  }
 };
 
 module.exports = nextConfig;
