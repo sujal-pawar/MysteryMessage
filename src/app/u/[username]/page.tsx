@@ -37,12 +37,6 @@ const UserMessagePage = () => {
     if (username) checkUser();
   }, [username]);
 
-  // Auto-fetch suggestions when username is available
-  useEffect(() => {
-    if (!username) return;
-    fetchSuggestions();
-  }, [username]);
-
   const fetchSuggestions = async () => {
     setSuggestLoading(true);
     try {
@@ -60,6 +54,13 @@ const UserMessagePage = () => {
       setSuggestLoading(false);
     }
   };
+
+  // Auto-fetch suggestions when username is available
+  useEffect(() => {
+    if (!username) return;
+    fetchSuggestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username]);
 
   const handleSuggestionClick = (text: string) => {
     setMessage(text);
@@ -79,9 +80,10 @@ const UserMessagePage = () => {
       } else {
         toast.error(response.data.message || 'Failed to send message');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error sending message:', error);
-      toast.error(error.response?.data?.message || 'Failed to send message');
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      toast.error(axiosError.response?.data?.message || 'Failed to send message');
     } finally {
       setLoading(false);
     }

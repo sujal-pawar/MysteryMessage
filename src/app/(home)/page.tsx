@@ -3,26 +3,14 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import DecryptedText from '../components/DecryptedText';
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import { Button } from "@/app/components/ui/button";
-import { Mail, Sun, Moon, ShieldCheck, Users } from "lucide-react";
+import { ShieldCheck, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
-import Autoplay from "embla-carousel-autoplay";
 import ScrollVelocity from '../components/ScrollVelocity';
-import messages from "@/message.json"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/app/components/ui/carousel";
 
-export default function page() {
+export default function Page() {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const currentYear = new Date().getFullYear();
 
   useEffect(() => setMounted(true), []);
 
@@ -148,7 +136,7 @@ export default function page() {
                 <Users className="mx-auto mb-4 h-12 w-12 text-blue-600 dark:text-blue-400" />
                 <h3 className="text-xl font-semibold mb-2">Receive & Respond</h3>
                 <p className="text-gray-700 dark:text-gray-300">
-                  Receive honest feedback without knowing the sender’s identity, fostering trust and openness.
+                  Receive honest feedback without knowing the sender's identity, fostering trust and openness.
                 </p>
               </div>
             </div>
@@ -228,7 +216,7 @@ export default function page() {
                   key={idx}
                   className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 shadow-md text-gray-700 dark:text-gray-300"
                 >
-                  <p className="italic mb-4">"{feedback}"</p>
+                  <p className="italic mb-4">&quot;{feedback}&quot;</p>
                   <footer className="text-right font-semibold">- {name}</footer>
                 </blockquote>
               ))}

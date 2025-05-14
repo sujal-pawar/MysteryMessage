@@ -5,7 +5,17 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
+import { Types } from "mongoose";
 
+// Define a user type for MongoDB user
+interface UserDocument {
+  _id: Types.ObjectId;
+  email: string;
+  username: string;
+  password: string;
+  isVerified: boolean;
+  isAcceptingMessages: boolean;
+}
 
 export const generateUsernameFromEmail = async (email: string): Promise<string> => {
   // 1. Get the part before '@' and strip out everything except A–Z / a–z
@@ -52,7 +62,7 @@ export const authOptions: NextAuthOptions = {
             { email: credentials.identifier },
             { username: credentials.identifier }
           ]
-        }) as any;
+        }) as UserDocument;
         if (!user) throw new Error("User not found");
         if (!user.isVerified) throw new Error("Please verify your account");
 
@@ -115,7 +125,7 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;

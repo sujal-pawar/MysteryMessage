@@ -147,7 +147,7 @@ Mystery Message Team
                     console.error("API Response data:", responseData);
                     errorDetails += ` - API Response: ${responseData}`;
                 } catch (e) {
-                    console.error("Could not stringify response data");
+                    console.error("Could not stringify response data",e);
                 }
             }
         }

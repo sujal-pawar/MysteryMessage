@@ -1,22 +1,21 @@
-import { getSession } from "next-auth/react";
 import { authOptions } from "../auth/[...nextauth]/options";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
-import {getServerSession, User} from "next-auth";
+import { getServerSession, User } from "next-auth";
 
-export async function POST(request:Request){
+export async function POST(request: Request) {
     await dbConnect()
 
-    const session= await getServerSession(authOptions)
-    const user:User = session?.user as User
+    const session = await getServerSession(authOptions)
+    const user: User = session?.user as User
 
-    if(!session || !session.user){
+    if (!session || !session.user) {
         return Response.json(
             {
-                success:false,
-                message:'Not Authenticated'
+                success: false,
+                message: 'Not Authenticated'
             },
-            {status:401}
+            { status: 401 }
         )
     }
 
@@ -24,62 +23,62 @@ export async function POST(request:Request){
     if (!userEmail) {
         return Response.json(
             {
-                success:false,
-                message:'User email not found in session'
+                success: false,
+                message: 'User email not found in session'
             },
-            {status:401}
+            { status: 401 }
         )
     }
 
-    const {acceptMessages}=await request.json()
+    const { acceptMessages } = await request.json()
 
-    try{
+    try {
         const userDoc = await UserModel.findOne({ email: userEmail });
         if (!userDoc) {
             return Response.json(
                 {
-                    success:false,
-                    message:'User not found in database'
+                    success: false,
+                    message: 'User not found in database'
                 },
-                {status:404}
+                { status: 404 }
             )
         }
 
         const updatedUser = await UserModel.findByIdAndUpdate(
             userDoc._id,
-            {isAcceptingMessages:acceptMessages},
-            {new:true}
+            { isAcceptingMessages: acceptMessages },
+            { new: true }
         )
-        if(!updatedUser){
+        if (!updatedUser) {
             return Response.json(
                 {
-                    success:false,
-                    message:'failed to update user status to accept messages'
+                    success: false,
+                    message: 'failed to update user status to accept messages'
                 },
-                {status:401}
+                { status: 401 }
             )
         }
 
         return Response.json(
             {
-                success:true,
-                message:'Message acceptance updated successfully',updatedUser
+                success: true,
+                message: 'Message acceptance updated successfully', updatedUser
             },
-            {status:200}
+            { status: 200 }
         )
-    }catch(error){
+    } catch (_) {
         console.log('failed to update user status to accept messages')
         return Response.json(
             {
-                success:false,
-                message:'failed to update user status to accept messages'
+                success: false,
+                message: 'failed to update user status to accept messages'
             },
-            {status:500}
+            { status: 500 }
         )
     }
 }
 
-export async function GET(request:Request){
+export async function GET(_: Request) {
     await dbConnect()
 
     const session = await getServerSession(authOptions)
@@ -126,7 +125,7 @@ export async function GET(request:Request){
             {status:200}
         )
     }
-    catch(error){
+    catch(_){
         console.log('failed to update user status to accept messages')
         return Response.json(
             {

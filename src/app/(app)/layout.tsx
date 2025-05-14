@@ -26,8 +26,12 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      {children}
-    </>
+    <AuthProvider>
+      <div className={`${geistSans.variable} ${geistMono.variable}`}>
+        <Navbar />
+        {children}
+        <Toaster />
+      </div>
+    </AuthProvider>
   );
 }

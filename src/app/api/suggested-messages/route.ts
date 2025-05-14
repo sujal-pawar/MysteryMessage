@@ -94,8 +94,9 @@ Avoid personal or sensitive topics. Format output as: 'Question 1?||Question 2?|
     });
 
     return Response.json({ success: true, suggestions: resultText.text }, { status: 200 });
-  } catch (err: any) {
+  } catch (err: Error | unknown) {
     console.error("Unexpected error in /api/suggested-messages:", err);
-    return Response.json({ success: false, error: err.message || "Internal server error" }, { status: err.status || 500 });
+    const error = err as { message?: string };
+    return Response.json({ success: false, error: error.message || "Internal server error" }, { status: 500 });
   }
 }
