@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import DecryptedText from '@/app/components/DecryptedText.tsx';
+import DecryptedText from '@/app/components/DecryptedText';
 import Link from "next/link";
 import { Button } from "@/app/components/ui/button";
 import { ShieldCheck, Users } from "lucide-react";
