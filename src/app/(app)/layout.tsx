@@ -27,8 +27,7 @@ export default function AppLayout({
 }>) {
   return (
     <AuthProvider>
-      <div className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Navbar />
+      <div className={`${geistSans.variable} ${geistMono.variable}`}>        
         {children}
         <Toaster />
       </div>

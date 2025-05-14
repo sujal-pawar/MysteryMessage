@@ -6,10 +6,8 @@ import { NextResponse } from 'next/server';
 // In your check-username-unique API route
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
+import { UsernameQuerySchema } from "@/schemas/usernameSchema";
 
-export const UsernameQuerySchema = z.object({
-    username: z.string().min(3).max(20),
-  });
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();

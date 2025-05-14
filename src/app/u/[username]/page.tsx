@@ -9,6 +9,7 @@ import { Textarea } from '@/app/components/ui/textarea';
 import { APIResponse } from '@/types/APIResponse';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import ShinyText from '@/app/components/ShinyText';
 
 const UserMessagePage = () => {
   const params = useParams<{ username: string }>();
@@ -118,8 +119,13 @@ const UserMessagePage = () => {
   );
 
   return (
-    <div className="pt-24 container dark:bg-black mx-auto  px-4 py-8">
-      <div className="flex flex-col  md:flex-row gap-8">
+    <div className="pt-16 container dark:bg-black mx-auto  px-4 py-8">
+      <h1 className='text-6xl max-sm:text-4xl text-center dark:text-white font-bold'>
+      <ShinyText text="MystreyMessage" disabled={false} speed={3} className='custom-class' />        
+      </h1>
+      <div className="flex flex-col pt-14 max-sm:pt-8 md:flex-row gap-8">
+
+        
 
         {/* Form Section */}
         <div className="md:w-2/3 bg-white dark:bg-black rounded-lg shadow-md p-6">
@@ -175,7 +181,7 @@ const UserMessagePage = () => {
         </div>
       </div>
       <section className="w-full px-4 py-22 dark:text-white font-bold  text-center">
-        <h2 className="text-4xl max-sm:text-4xl max-sm:py-4 font-semibold mb-4">Ready to get honest feedback?</h2>
+        <h2 className="text-4xl max-sm:text-4xl py-2 max-sm:py-4 font-semibold mb-4">Ready to get honest feedback?</h2>
         <Button
           size="lg"
           className="text-white font-semibold px-6 py-3 rounded-lg  shadow-lg"
