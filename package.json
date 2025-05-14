@@ -38,6 +38,7 @@
     "resend": "^4.4.1",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0",
+    "textarea": "^0.3.0",
     "usehooks-ts": "^3.1.1",
     "zod": "^3.24.3"
   },

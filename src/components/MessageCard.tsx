@@ -19,55 +19,77 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Message } from "@/model/User"
-import { APIUserAbortError } from "openai"
+import { Trash2 } from 'lucide-react'
 import axios from "axios"
 import { APIResponse } from "@/types/APIResponse"
 import { toast } from "sonner"
 
-type MessageCardprops={
-    message:Message, 
-    onMessageDelete:(messageId:string)=> void 
+type MessageCardProps = {
+    message: Message, 
+    onMessageDelete: (messageId: string) => void 
 }
 
-const MessageCard = ({message,onMessageDelete}:MessageCardprops) => {
+const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
+    // Format date to display in a user-friendly way
+    const formatDate = (dateString: string | Date) => {
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            return 'Unknown date';
+        }
+    };
 
-    const handleDeleteConfirm = async ()=>{
-        const response = await axios.delete<APIResponse>(`api/delete-message/${message._id}`)
-        toast(response.data.message)
-        onMessageDelete(message._id as string)
-    }   
+    const handleDeleteConfirm = async () => {
+        try {
+            const response = await axios.delete<APIResponse>(`/api/delete-message/${message._id}`);
+            toast.success(response.data.message || 'Message deleted successfully');
+            onMessageDelete(message._id as string);
+        } catch (error) {
+            toast.error('Failed to delete message');
+            console.error('Error deleting message:', error);
+        }
+    };
+    
     return (
-        <div>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Card Title</CardTitle>
+        <Card className="overflow-hidden hover:shadow-md transition-shadow">
+            <CardHeader className="pb-2">
+                <div className="flex justify-between items-center">
+                    <CardTitle className="text-lg font-medium">Anonymous Message</CardTitle>
                     <AlertDialog>
-                        <AlertDialogTrigger>Open</AlertDialogTrigger>
+                        <AlertDialogTrigger asChild>
+                            <button className="text-red-500 hover:text-red-700">
+                                <Trash2 className="h-5 w-5" />
+                            </button>
+                        </AlertDialogTrigger>
                         <AlertDialogContent>
                             <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogTitle>Delete this message?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete your account
-                                    and remove your data from our servers.
+                                    This action cannot be undone. This message will be permanently removed.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDeleteConfirm}>Continue</AlertDialogAction>
+                                <AlertDialogAction onClick={handleDeleteConfirm} className="bg-red-500 hover:bg-red-600">
+                                    Delete
+                                </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
-                    <CardDescription>Card Description</CardDescription>
-                </CardHeader>
-                <CardContent>
-
-                </CardContent>
-                <CardFooter>
-
-                </CardFooter>
-            </Card>
-
-        </div>
+                </div>
+                <CardDescription>{formatDate(message.createdAt)}</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-0">
+                <p className="whitespace-pre-line">{message.content}</p>
+            </CardContent>
+        </Card>
     )
 }
 

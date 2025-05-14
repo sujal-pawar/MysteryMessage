@@ -5,11 +5,11 @@ import { userNameValidation } from "@/schemas/signupSchema";
 
 export async function POST(request:Request){
     try{
+        await dbConnect();
         const {username,code}= await request.json()
 
         const decodedUsername = decodeURIComponent(username)
         const user = await UserModel.findOne({username:decodedUsername})
-
 
         if(!user){
             return Response.json({
@@ -18,34 +18,39 @@ export async function POST(request:Request){
             },{status:404})
         }
 
-        const isCodeValid = user.verifyCode === code
-        const isCodeNotExpired = new Date(user.verifyCodeExpired)>new Date
-
-        if(isCodeValid && isCodeNotExpired){
-            user.isVerified==true,
-            await user.save() 
-
+        // Check if code is expired first
+        const isCodeExpired = new Date(user.verifyCodeExpired) < new Date();
+        if (isCodeExpired) {
             return Response.json({
-                success:true,
-                message:'User verified successfully'
-            },{status:200})
-        }else if (isCodeNotExpired){
-            return Response.json({
-                success:false,
-                message:'User has expired , please sign in again'
-            },{status:401})
-        }else{
-            return Response.json({
-                success:false,
-                message:'Incorrect verification code'
-            },{status:401})
+                success: false,
+                message: 'Verification code has expired. Please request a new code.',
+                isExpired: true
+            }, {status: 401})
         }
 
-    }catch(error){
-        console.error(" Error in verifying username ",error)
+        // Check if the code is valid
+        const isCodeValid = user.verifyCode === code;
+        if (!isCodeValid) {
+            return Response.json({
+                success: false,
+                message: 'Incorrect verification code. Please try again.',
+                isInvalid: true
+            }, {status: 401})
+        }
+
+        // Code is valid and not expired
+        user.isVerified = true;
+        await user.save() 
+
         return Response.json({
-            success:false,
-            message:'Error in verifying user-name'
-        },{status:500})
+            success: true,
+            message: 'User verified successfully'
+        }, {status: 200})
+    } catch(error){
+        console.error("Error in verifying username", error)
+        return Response.json({
+            success: false,
+            message: 'Error in verifying user account'
+        }, {status: 500})
     }
 }

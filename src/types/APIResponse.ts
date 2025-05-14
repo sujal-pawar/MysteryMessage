@@ -5,4 +5,5 @@ export interface APIResponse {
     message: string;
     isAcceptingMessages?: boolean;
     messages?: Array<Message>;  
+    verificationCode?: string; // For development environment only
 }

@@ -1,30 +1,40 @@
 "use client"
-import { Link } from 'lucide-react'
+import { Link as LucideLink } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
 import React from 'react'
 import { User } from 'next-auth'
 import { Button } from './ui/button'
-import { redirect } from 'next/navigation'
-import { render } from '@react-email/components'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const Navbar = () => {
-
     const { data: session, status } = useSession()
-
-    const user: User = session?.user as User
+    const router = useRouter()
 
     return (
-        <nav className=' w-full p-4 md:p-6 shadow-md'>
+        <nav className='w-full p-4 md:p-6 shadow-md '>
             <div className='container mx-auto flex flex-col
             md:flex-row justify-between items-center'>
-                <a href="/" className='text-xl fond-bold mb-4 md:mb-0'> MysteryMessage </a>
-                {
-                    session ? (<><span className='mr-4'>Welcome, {user.username || user.email}</span>
-                        <Button className='w-full md:w-auto' onClick={() => signOut()}> Log Out</Button>
-                    </>) : (                    
-                        <Button onClick={()=>{redirect('/sign-in')}} className='w-full md:w-auto'>Log in</Button>                        
-                    )
-                }
+                <Link href="/" className='text-xl font-bold mb-4 md:mb-0'>
+                    MysteryMessage
+                </Link>
+                
+                {status === 'loading' ? (
+                    <span>Loading...</span>
+                ) : session ? (
+                    <div className="flex items-center gap-4">                        
+                        <Button 
+                            className='w-full md:w-auto' 
+                            onClick={() => signOut({ callbackUrl: '/' })}
+                        >
+                            Log Out
+                        </Button>
+                    </div>
+                ) : (                    
+                    <Link href="/sign-in">
+                        <Button className='w-full md:w-auto'>Log in</Button>
+                    </Link>                      
+                )}
             </div>
         </nav>
     )

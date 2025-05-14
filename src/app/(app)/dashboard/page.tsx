@@ -51,22 +51,25 @@ function UserDashboard() {
   const fetchMessages = useCallback(
     async (refresh: boolean = false) => {
       setIsLoading(true);
-      setIsSwitchLoading(false);
       try {
         const response = await axios.get<APIResponse>('/api/get-messages');
+        console.log('API response for messages:', response.data);
+        
+        // Ensure messages is always an array
         setMessages(response.data.messages || []);
+        
         if (refresh) {
-          toast('Showing latest messages');
+          toast.success('Messages refreshed');
         }
       } catch (error) {
+        console.error('Error fetching messages:', error);
         const axiosError = error as AxiosError<APIResponse>;
-        toast(axiosError.response?.data.message ?? 'Failed to fetch messages');
+        toast.error(axiosError.response?.data.message || 'Failed to fetch messages');
       } finally {
         setIsLoading(false);
-        setIsSwitchLoading(false);
       }
     },
-    [setIsLoading, setMessages, toast]
+    [toast]
   );
 
   // Fetch initial state from the server
@@ -105,10 +108,11 @@ function UserDashboard() {
     navigator.clipboard.writeText(profileUrl);
     toast('Profile URL has been copied to clipboard.');
   };
+  const usernameforDashboard = session?.user?.username || session?.user?.email || 'User'
 
   return (
     <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
-      <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
+      <h1 className="text-4xl font-bold mb-4">Welcome, {usernameforDashboard}</h1>
 
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{' '}
@@ -151,15 +155,21 @@ function UserDashboard() {
         )}
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {messages.length > 0 ? (
-          messages.map((message, index) => (
-            <MessageCard              
+        {messages && messages.length > 0 ? (
+          messages.map((message) => (
+            <MessageCard
+              key={message._id?.toString() || Math.random().toString()}
               message={message}
               onMessageDelete={handleDeleteMessage}
             />
           ))
         ) : (
-          <p>No messages to display.</p>
+          <div className="col-span-2 text-center p-8 bg-gray-50 rounded-lg">
+            <p className="text-gray-500">No messages to display.</p>
+            <p className="text-sm text-gray-400 mt-2">
+              Share your profile link to receive anonymous messages.
+            </p>
+          </div>
         )}
       </div>
     </div>

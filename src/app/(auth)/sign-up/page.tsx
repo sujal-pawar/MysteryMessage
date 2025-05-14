@@ -34,6 +34,54 @@ const page = () => {
       password: ''
     }
   })
+  const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
+    try {
+      setisSubmiting(true);
+      
+      // Better approach: Perform a synchronous check right before submission
+      const usernameResponse = await axios.get<APIResponse>(`/api/check-username-unique?username=${data.username}`);
+      
+      if (!usernameResponse.data.success) {
+        toast.error(usernameResponse.data.message || "Username is already taken or invalid");
+        setisSubmiting(false);
+        return;
+      }
+      
+      const response = await axios.post<APIResponse>('/api/sign-up', data);
+      
+      if (response.data.success) {
+        // Show a more detailed success message with verification instructions
+        toast.success(
+          "Account created successfully! Check your email for a verification code.",
+          {
+            duration: 5000, // Show for longer
+          }
+        );
+        
+        // Redirect to verification page with username using the dynamic route
+        router.push(`/verify/${encodeURIComponent(data.username)}`);
+      } else {
+        toast.error(
+          Array.isArray(response.data.message)
+            ? response.data.message.join(", ")
+            : response.data.message || "Failed to create account"
+        );
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<APIResponse>;
+      const errorMessage = axiosError.response?.data.message || "Something went wrong";
+      
+      toast.error(
+        Array.isArray(errorMessage)
+          ? errorMessage.join(", ")
+          : errorMessage
+      );
+      
+      console.error("Sign up error:", error);
+    } finally {
+      setisSubmiting(false);
+    }
+  };
 
   useEffect(() => {
     const checkUserNameUnique = async () => {
@@ -43,49 +91,40 @@ const page = () => {
         try {
           const response = await axios.get(`/api/check-username-unique?username=${username}`);
           setusernameMessage(response.data.message);
+
+          // Update form validation state based on username availability
+          if (response.data.success && response.data.message === "Username is unique") {
+            form.clearErrors("username");
+          } else {
+            form.setError("username", {
+              type: "manual",
+              message: "Username already taken"
+            });
+          }
         } catch (error) {
-          const axiosError = error as AxiosError<APIResponse>
+          const axiosError = error as AxiosError<APIResponse>;
           setusernameMessage(
-            axiosError.response?.data.message ?? "Error checking message"
-          )
+            axiosError.response?.data.message ?? "Error checking username"
+          );
+
+          // Set form error to prevent submission with invalid username
+          form.setError("username", {
+            type: "manual",
+            message: axiosError.response?.data.message ?? "Username validation failed"
+          });
         } finally {
-          setischeckingUserName(false)
+          setischeckingUserName(false);
         }
       }
-    }
+    };
+
     checkUserNameUnique();
-  }, [username])
-
-  const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
-    setisSubmiting(true)
-    try {
-      const response = await axios.post<APIResponse>('/api/sign-up', data)
-      toast.success(String(response.data.messages?.[0] || "Operation successful"))
-      router.replace(`/verify/${username}`)
-      setisSubmiting(false)
-    } catch (error) {
-      console.log(error)
-      const axiosError = error as AxiosError<APIResponse>
-      let errorMessage = axiosError.response?.data.message
-      toast(
-        errorMessage ?? "An unexpected error occurred",
-        {
-          style: {
-            backgroundColor: "red",
-            color: "white",
-          },
-          duration: 4000,
-        }
-      )
-      setisSubmiting(false)
-    }
-  }
-
+  }, [username, form]);
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="flex justify-center">
-          <h1 className="text-4xl text-gray-800 font-serif font-bold dark:text-gray-200">MystreyMessage </h1>          
+          <h1 className="text-4xl text-gray-800 font-serif font-bold dark:text-gray-200">MystreyMessage </h1>
         </div>
 
         <div className="text-center">
@@ -98,18 +137,36 @@ const page = () => {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="username"
+                      <Input
+                        placeholder="username"
                         {...field}
                         onChange={(e) => {
-                          field.onChange(e)
-                          debounced(e.target.value)
+                          field.onChange(e);
+                          debounced(e.target.value);
                         }}
                       />
                     </FormControl>
-                    {ischeckingUserName && <Loader2 className="animate-spin" />}
-                    {/* <p className={`text-sm ${usernameMessage === "Username is unique" ? "text-green-500" : "text-red-500"}`}>
-                      test {usernameMessage}
-                    </p> */}
+                    <div className="flex items-center h-6">
+                      {ischeckingUserName ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : username ? (
+                        usernameMessage === "Username is unique" ? (
+                          <p className="text-sm text-green-500 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            Username available
+                          </p>
+                        ) : (
+                          <p className="text-sm text-red-500 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            {usernameMessage}
+                          </p>
+                        )
+                      ) : null}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
