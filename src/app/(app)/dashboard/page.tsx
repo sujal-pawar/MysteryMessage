@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import  MessageCard  from '@/components/MessageCard';
+import MessageCard from '@/components/MessageCard';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
-import { toast } from "sonner"
+import { toast } from "sonner";
 import { Message } from '@/model/User';
 import { APIResponse } from '@/types/APIResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,7 +20,6 @@ function UserDashboard() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-
 
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
@@ -42,56 +41,48 @@ function UserDashboard() {
       setValue('acceptMessages', response.data.isAcceptingMessages ?? false);
     } catch (error) {
       const axiosError = error as AxiosError<APIResponse>;
-      toast(axiosError.response?.data.message ??'Failed to fetch message settings');
+      toast.error(axiosError.response?.data.message ?? 'Failed to fetch message settings');
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue, toast]);
+  }, [setValue]);
 
   const fetchMessages = useCallback(
     async (refresh: boolean = false) => {
       setIsLoading(true);
       try {
         const response = await axios.get<APIResponse>('/api/get-messages');
-        console.log('API response for messages:', response.data);
-        
-        // Ensure messages is always an array
         setMessages(response.data.messages || []);
-        
         if (refresh) {
           toast.success('Messages refreshed');
         }
       } catch (error) {
-        console.error('Error fetching messages:', error);
         const axiosError = error as AxiosError<APIResponse>;
         toast.error(axiosError.response?.data.message || 'Failed to fetch messages');
       } finally {
         setIsLoading(false);
       }
     },
-    [toast]
+    []
   );
 
-  // Fetch initial state from the server
   useEffect(() => {
     if (!session || !session.user) return;
 
     fetchMessages();
-
     fetchAcceptMessages();
-  }, [session, setValue, toast, fetchAcceptMessages, fetchMessages]);
+  }, [session, fetchAcceptMessages, fetchMessages]);
 
-  // Handle switch change
   const handleSwitchChange = async () => {
     try {
       const response = await axios.post<APIResponse>('/api/accept-messages', {
         acceptMessages: !acceptMessages,
       });
       setValue('acceptMessages', !acceptMessages);
-      toast(response.data.message);
+      toast.success(response.data.message);
     } catch (error) {
       const axiosError = error as AxiosError<APIResponse>;
-      toast(axiosError.response?.data.message ?? 'Failed to update message settings');
+      toast.error(axiosError.response?.data.message ?? 'Failed to update message settings');
     }
   };
 
@@ -106,39 +97,46 @@ function UserDashboard() {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
-    toast('Profile URL has been copied to clipboard.');
+    toast.success('Profile URL has been copied to clipboard.');
   };
-  const usernameforDashboard = session?.user?.username || session?.user?.email || 'User'
+  const usernameforDashboard = session?.user?.username || session?.user?.email || 'User';
 
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
-      <h1 className="text-4xl font-bold mb-4">Welcome, {usernameforDashboard}</h1>
+    <div className="pt-14 w-full px-10 md:mx-8 lg:mx-auto p-6 bg-white dark:bg-gray-900 rounded  transition-colors">
+      <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+        Welcome, {usernameforDashboard}
+      </h1>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{' '}
+        <h2 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
+          Copy Your Unique Link
+        </h2>
         <div className="flex items-center">
           <input
             type="text"
             value={profileUrl}
             disabled
-            className="input input-bordered w-full p-2 mr-2"
+            className="input input-bordered w-full p-2 mr-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded transition-colors"
           />
-          <Button onClick={copyToClipboard}>Copy</Button>
+          <Button onClick={copyToClipboard} className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors">
+            Copy
+          </Button>
         </div>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 flex items-center">
         <Switch
           {...register('acceptMessages')}
           checked={acceptMessages}
           onCheckedChange={handleSwitchChange}
           disabled={isSwitchLoading}
+          className="dark:ring-offset-gray-900"
         />
-        <span className="ml-2">
+        <span className="ml-2 text-gray-800 dark:text-gray-200 select-none">
           Accept Messages: {acceptMessages ? 'On' : 'Off'}
         </span>
       </div>
-      <Separator />
+      <Separator className="border-gray-300 dark:border-gray-700" />
 
       <Button
         className="mt-4"
@@ -149,9 +147,9 @@ function UserDashboard() {
         }}
       >
         {isLoading ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="h-4 w-4 animate-spin text-gray-700 dark:text-gray-300" />
         ) : (
-          <RefreshCcw className="h-4 w-4" />
+          <RefreshCcw className="h-4 w-4 text-gray-700 dark:text-gray-300" />
         )}
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -164,9 +162,9 @@ function UserDashboard() {
             />
           ))
         ) : (
-          <div className="col-span-2 text-center p-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">No messages to display.</p>
-            <p className="text-sm text-gray-400 mt-2">
+          <div className="col-span-2 text-center p-8 bg-gray-50 dark:bg-gray-800 rounded-lg transition-colors">
+            <p className="text-gray-500 dark:text-gray-400">No messages to display.</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
               Share your profile link to receive anonymous messages.
             </p>
           </div>

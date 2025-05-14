@@ -33,11 +33,8 @@ const VerifyAccount = () => {
     // Check local storage for saved verification code
     useEffect(() => {
         try {
-            // Check if we're in development mode
             if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                 setIsDevMode(true);
-                
-                // Try to retrieve verification code from localStorage
                 const storedCode = localStorage.getItem(`verification_${username}`);
                 if (storedCode) {
                     setDevVerificationCode(storedCode);
@@ -60,15 +57,11 @@ const VerifyAccount = () => {
 
             if (response.data.success) {
                 toast.success("Account verified successfully!")
-                
-                // Clean up any stored verification code for this user
                 try {
                     localStorage.removeItem(`verification_${username}`);
                 } catch (e) {
                     console.error("Could not clear localStorage", e);
                 }
-                
-                // Redirect to sign-in page 
                 router.push('/sign-in')
             } else {
                 toast.error(response.data.message || "Verification failed")
@@ -88,20 +81,16 @@ const VerifyAccount = () => {
                 username: decodeURIComponent(username),
                 resendCode: true
             })
-            
             if (response.data.success) {
-                // For development or free tier restrictions: If there's a verification code in the response, store it
                 if (response.data.verificationCode) {
                     setDevVerificationCode(response.data.verificationCode);
                     form.setValue('code', response.data.verificationCode);
-                    
                     try {
                         localStorage.setItem(`verification_${username}`, response.data.verificationCode);
                     } catch (e) {
                         console.error("Could not store in localStorage", e);
                     }
                 }
-                
                 toast.success(response.data.message || "Verification code resent. Please check your email.")
             } else {
                 toast.error(response.data.message || "Failed to resend verification code")
@@ -115,25 +104,25 @@ const VerifyAccount = () => {
     }
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+        <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
+            <div className="w-full max-w-md p-8 space-y-8 bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-black/40 transition-colors">
                 <div className="text-center">
-                    <h1 className="text-2xl font-bold">Verify Your Account</h1>
-                    <p className="mt-2 text-gray-600">
+                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Verify Your Account</h1>
+                    <p className="mt-2 text-gray-600 dark:text-gray-300">
                         Please enter the verification code sent to your email
                     </p>
                 </div>
 
                 {devVerificationCode && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-md p-4 my-4">
+                    <div className="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-md p-4 my-4 transition-colors">
                         <div className="flex items-start">
-                            <AlertCircle className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
+                            <AlertCircle className="h-5 w-5 text-blue-500 dark:text-blue-300 mr-2 mt-0.5" />
                             <div>
-                                <h3 className="text-sm font-medium text-blue-800">Development Mode</h3>
-                                <p className="text-sm text-blue-700 mt-1">
+                                <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">Development Mode</h3>
+                                <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
                                     Verification code: <span className="font-mono font-semibold">{devVerificationCode}</span>
                                 </p>
-                                <p className="text-xs text-blue-600 mt-1">
+                                <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
                                     This code is being displayed due to free tier limitations or development mode
                                 </p>
                             </div>
@@ -145,20 +134,28 @@ const VerifyAccount = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField
                             name="code"
-                            control={form.control}                            
+                            control={form.control}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Verification Code</FormLabel>
+                                    <FormLabel className="text-gray-700 dark:text-gray-300">Verification Code</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Enter 6-digit code" {...field} />
-                                    </FormControl>                                    
-                                    <FormMessage />
+                                        <Input
+                                            placeholder="Enter 6-digit code"
+                                            {...field}
+                                            className="placeholder-gray-400 dark:placeholder-gray-500"
+                                        />
+                                    </FormControl>
+                                    <FormMessage className="text-red-600 dark:text-red-400" />
                                 </FormItem>
                             )}
                         />
-                        
+
                         <div className="flex flex-col space-y-4">
-                            <Button type="submit" disabled={isSubmitting}>
+                            <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+                            >
                                 {isSubmitting ? (
                                     <>
                                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -168,12 +165,12 @@ const VerifyAccount = () => {
                                     "Verify Account"
                                 )}
                             </Button>
-                            
-                            <Button 
-                                type="button" 
+                            <Button
+                                type="button"
                                 variant="outline"
                                 onClick={resendVerificationCode}
                                 disabled={isResending}
+                                className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                             >
                                 {isResending ? (
                                     <>
@@ -192,4 +189,4 @@ const VerifyAccount = () => {
     )
 }
 
-export default VerifyAccount 
+export default VerifyAccount

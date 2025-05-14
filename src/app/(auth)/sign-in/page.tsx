@@ -1,4 +1,3 @@
-// /app/sign-in/page.tsx
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +17,7 @@ import { Loader2 } from "lucide-react";
 const SignInPage = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: { identifier: "", password: "" }
@@ -37,8 +36,7 @@ const SignInPage = () => {
         toast(result.error || "Incorrect username or password");
         return;
       }
-      
-      // If no error, authentication was successful
+
       toast("Login successful!");
       router.push("/dashboard");
     } catch (error) {
@@ -50,9 +48,9 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-4xl text-gray-800 font-serif font-bold text-center">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-black/40 transition-colors">
+        <h1 className="text-4xl font-serif font-bold text-center text-gray-800 dark:text-gray-100">
           MysteryMessage
         </h1>
         <Form {...form}>
@@ -62,11 +60,15 @@ const SignInPage = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email or Username</FormLabel>
+                  <FormLabel className="text-gray-700 dark:text-gray-300">Email or Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="email or username" {...field} />
+                    <Input
+                      placeholder="email or username"
+                      {...field}
+                      className="placeholder-gray-400 dark:placeholder-gray-500"
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-600 dark:text-red-400" />
                 </FormItem>
               )}
             />
@@ -75,15 +77,24 @@ const SignInPage = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-gray-700 dark:text-gray-300">Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="password" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="password"
+                      {...field}
+                      className="placeholder-gray-400 dark:placeholder-gray-500"
+                    />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-600 dark:text-red-400" />
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting} className="w-full">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+            >
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -95,9 +106,9 @@ const SignInPage = () => {
             </Button>
           </form>
         </Form>
-        <p className="text-center">
+        <p className="text-center text-gray-700 dark:text-gray-300">
           New member?{" "}
-          <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
+          <Link href="/sign-up" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors">
             Sign Up
           </Link>
         </p>

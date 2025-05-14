@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
@@ -68,9 +69,9 @@ const UserMessagePage = () => {
   if (!userExists) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-md">
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center transition-colors">
           <h1 className="text-2xl font-bold text-red-500 mb-4">User Not Found</h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             The user you are looking for does not exist or has deleted their account.
           </p>
         </div>
@@ -81,9 +82,9 @@ const UserMessagePage = () => {
   if (!isAcceptingMessages) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-md">
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-700 mb-4">Messages Disabled</h1>
-          <p className="text-gray-600">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center transition-colors">
+          <h1 className="text-2xl font-bold text-gray-700 dark:text-gray-200 mb-4">Messages Disabled</h1>
+          <p className="text-gray-600 dark:text-gray-300">
             This user is not currently accepting messages.
           </p>
         </div>
@@ -94,12 +95,14 @@ const UserMessagePage = () => {
   if (submitted) {
     return (
       <div className="container mx-auto px-4 py-16 max-w-md">
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center transition-colors">
           <h1 className="text-2xl font-bold text-green-600 mb-4">Message Sent!</h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
             Your anonymous message has been delivered successfully.
           </p>
-          <Button onClick={() => setSubmitted(false)}>Send Another Message</Button>
+          <Button onClick={() => setSubmitted(false)} className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors">
+            Send Another Message
+          </Button>
         </div>
       </div>
     );
@@ -107,11 +110,11 @@ const UserMessagePage = () => {
 
   return (
     <div className="pt-24 container mx-auto px-4 py-8 max-w-md">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-center mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors">
+        <h1 className="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
           Send a message to @{username}
         </h1>
-        <p className="text-gray-500 text-sm mb-6 text-center">
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 text-center">
           This message will be completely anonymous. The recipient will not know who sent it.
         </p>
 
@@ -121,11 +124,15 @@ const UserMessagePage = () => {
               value={message}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
               placeholder="Type your anonymous message here..."
-              className="min-h-32"
+              className="min-h-32 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 transition-colors"
               disabled={loading}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+            disabled={loading}
+          >
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
@@ -140,4 +147,4 @@ const UserMessagePage = () => {
   );
 };
 
-export default UserMessagePage; 
+export default UserMessagePage;
