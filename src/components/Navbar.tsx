@@ -18,7 +18,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className='fixed w-full p-4 md:p-6 bg-white dark:bg-gray-900 shadow-sm z-50 border-b dark:border-gray-800'>
+        <nav className='fixed w-full p-4 md:p-6 bg-white dark:bg-gray-900  z-50 '>
             <div className='container mx-auto'>
                 {/* Desktop Navigation */}
                 <div className='hidden md:flex justify-between items-center'>
