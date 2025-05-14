@@ -6,7 +6,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/app/components/ui/card"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -17,7 +17,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/app/components/ui/alert-dialog"
 import { Message } from "@/model/User"
 import { Trash2 } from 'lucide-react'
 import axios from "axios"

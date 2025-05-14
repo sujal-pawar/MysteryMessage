@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/app/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/components/ui/form"
+import { Input } from "@/app/components/ui/input"
 import { verifySchema } from '@/schemas/verifySchema'
 import { APIResponse } from '@/types/APIResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -104,7 +104,7 @@ const VerifyAccount = () => {
     }
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
+        <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-black transition-colors">
             <div className="w-full max-w-md p-8 space-y-8 bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-black/40 transition-colors">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Verify Your Account</h1>

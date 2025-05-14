@@ -1,17 +1,17 @@
 "use client"
 
 import Link from "next/link"
-import { Github, Mail, Heart } from "lucide-react"
+import { Github, Mail, Heart, Linkedin } from "lucide-react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="w-full py-6 px-4 md:px-6 border-t dark:border-gray-800">
+    <footer className="w-full dark:bg-black py-6 px-4 md:px-6 ">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">Mystery Message</h3>
+            <h3 className="text-lg font-semibold mb-4">MysteryMessage</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Send anonymous messages to your friends and receive messages from others.
             </p>
@@ -47,6 +47,9 @@ export function Footer() {
               <a href="https://github.com/sujal-pawar" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
                 <Github className="h-5 w-5" />
               </a>
+              <a href="https://www.linkedin.com/in/sujal-pawar/" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+                <Linkedin className="h-5 w-5" />
+              </a>
             </div>
           </div>
         </div>
@@ -55,9 +58,7 @@ export function Footer() {
           <p className="text-sm text-gray-500 dark:text-gray-400">
             © {currentYear} Mystery Message. All rights reserved.
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-2 md:mt-0">
-            Made with <Heart className="h-4 w-4 mx-1 text-red-500" /> by Sujal
-          </p>
+          
         </div>
       </div>
     </footer>

@@ -10,9 +10,9 @@ import { useRouter } from "next/navigation"
 import { signUpSchema } from "@/schemas/signupSchema"
 import axios, { AxiosError } from 'axios'
 import { APIResponse } from "@/types/APIResponse"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/components/ui/form"
+import { Input } from "@/app/components/ui/input"
+import { Button } from "@/app/components/ui/button"
 import { Loader2 } from "lucide-react"
 
 const page = () => {
@@ -105,7 +105,7 @@ const page = () => {
   }, [username, form]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-black transition-colors">
       <div className="w-full max-w-md p-8 space-y-8 bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-black/40 transition-colors">
         <div className="flex justify-center">
           <h1 className="text-4xl font-serif font-bold text-center text-gray-800 dark:text-gray-100">

@@ -1,36 +1,57 @@
 "use client"
 import { Link as LucideLink, Menu, X, User as UserIcon } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { User } from 'next-auth'
 import { Button } from './ui/button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ThemeToggle } from './ThemeToggle'
+import logo from "../assets/logo.png"
+import Image from "next/image"
 
 const Navbar = () => {
     const { data: session, status } = useSession()
     const router = useRouter()
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const [mounted, setMounted] = useState(false)
+
+    // Fix hydration errors by ensuring client-side initialization happens after mounting
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen)
     }
 
+    // Only render the complete UI after client-side mount
+    if (!mounted) {
+        return (
+            <nav className='fixed w-full p-4 md:p-6 bg-white dark:bg-black z-50'>
+                <div className='container mx-auto'>
+                    <div className='flex justify-between items-center'>
+                        <span className='text-xl font-bold'>MysteryMessage</span>
+                    </div>
+                </div>
+            </nav>
+        )
+    }
+
     return (
-        <nav className='fixed w-full p-4 md:p-6 bg-white dark:bg-gray-900  z-50 '>
+        <nav className='fixed w-full p-2 md:p-4 bg-white dark:bg-black z-50'>
             <div className='container mx-auto'>
                 {/* Desktop Navigation */}
                 <div className='hidden md:flex justify-between items-center'>
-                    <Link href="/" className='text-xl font-bold'>
-                        MysteryMessage
+                    <Link href="/" className=''>
+                        <Image src={logo} alt="MysteryMessage logo" width={60} height={30} />
                     </Link>
-                    
-                    <div className="flex items-center gap-6">                        
-                        
+
+                    <div className="flex items-center gap-6">
+
                         <div className="flex items-center gap-3">
                             <ThemeToggle />
-                            
+
                             {status === 'loading' ? (
                                 <span className="text-sm">Loading...</span>
                             ) : session ? (
@@ -41,17 +62,17 @@ const Navbar = () => {
                                         </div>
                                         <span className="text-sm font-medium">{session.user.username}</span>
                                     </div>
-                                    <Button 
+                                    <Button
                                         size="sm"
                                         onClick={() => signOut({ callbackUrl: '/' })}
                                     >
                                         Log Out
                                     </Button>
                                 </div>
-                            ) : (                    
+                            ) : (
                                 <Link href="/sign-in">
                                     <Button size="sm">Log in</Button>
-                                </Link>                      
+                                </Link>
                             )}
                         </div>
                     </div>
@@ -59,15 +80,15 @@ const Navbar = () => {
 
                 {/* Mobile Navigation */}
                 <div className='flex md:hidden justify-between items-center'>
-                    <Link href="/" className='text-xl font-bold'>
-                        MysteryMessage
+                <Link href="/" className=''>
+                <Image src={logo} alt="MysteryMessage logo" width={50} height={30} />
                     </Link>
-                    
+
                     <div className="flex items-center gap-2">
                         <ThemeToggle />
-                        <Button 
-                            variant="ghost" 
-                            size="icon" 
+                        <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={toggleMobileMenu}
                             aria-label="Toggle menu"
                         >
@@ -83,8 +104,7 @@ const Navbar = () => {
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
                     <div className="md:hidden pt-4 pb-2 px-2 space-y-4 border-t dark:border-gray-800 mt-4">
-                        
-                        
+
                         {status === 'loading' ? (
                             <span className="block py-2 text-sm">Loading...</span>
                         ) : session ? (
@@ -95,7 +115,7 @@ const Navbar = () => {
                                     </div>
                                     <span className="text-sm font-medium">{session.user.username}</span>
                                 </div>
-                                <Button 
+                                <Button
                                     className='w-full'
                                     onClick={() => {
                                         signOut({ callbackUrl: '/' })
@@ -105,14 +125,14 @@ const Navbar = () => {
                                     Log Out
                                 </Button>
                             </>
-                        ) : (                    
-                            <Link 
-                                href="/sign-in" 
+                        ) : (
+                            <Link
+                                href="/sign-in"
                                 className="block"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 <Button className='w-full'>Log in</Button>
-                            </Link>                      
+                            </Link>
                         )}
                     </div>
                 )}

@@ -1,9 +1,9 @@
 "use client";
 
-import MessageCard from '@/components/MessageCard';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Switch } from '@/components/ui/switch';
+import MessageCard from '@/app/components/MessageCard';
+import { Button } from '@/app/components/ui/button';
+import { Separator } from '@/app/components/ui/separator';
+import { Switch } from '@/app/components/ui/switch';
 import { toast } from "sonner";
 import { Message } from '@/model/User';
 import { APIResponse } from '@/types/APIResponse';
@@ -102,7 +102,7 @@ function UserDashboard() {
   const usernameforDashboard = session?.user?.username || session?.user?.email || 'User';
 
   return (
-    <div className="pt-14 w-full px-10 md:mx-8 lg:mx-auto p-6 bg-white dark:bg-gray-900 rounded  transition-colors">
+    <div className="pt-14 w-full px-10 md:mx-8 lg:mx-auto p-6 bg-white dark:bg-black rounded  transition-colors">
       <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100">
         Welcome, {usernameforDashboard}
       </h1>

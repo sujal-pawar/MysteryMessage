@@ -6,9 +6,9 @@ import * as z from "zod";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/components/ui/form";
+import { Input } from "@/app/components/ui/input";
+import { Button } from "@/app/components/ui/button";
 import { signinSchema } from "@/schemas/signinSchema";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
@@ -48,7 +48,7 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-black transition-colors">
       <div className="w-full max-w-md p-8 space-y-8 bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-black/40 transition-colors">
         <h1 className="text-4xl font-serif font-bold text-center text-gray-800 dark:text-gray-100">
           MysteryMessage
