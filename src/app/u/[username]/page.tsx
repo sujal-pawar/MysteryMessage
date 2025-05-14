@@ -9,7 +9,6 @@ import { Textarea } from '@/app/components/ui/textarea';
 import { APIResponse } from '@/types/APIResponse';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
-import ShinyText from '@/app/components/ShinyText';
 
 const UserMessagePage = () => {
   const params = useParams<{ username: string }>();
@@ -119,10 +118,7 @@ const UserMessagePage = () => {
   );
 
   return (
-    <div className="pt-16 container dark:bg-black mx-auto  px-4 py-8">
-      <h1 className='text-6xl max-sm:text-4xl text-center dark:text-white font-bold'>
-      <ShinyText text="MystreyMessage" disabled={false} speed={3} className='custom-class' />        
-      </h1>
+    <div className="pt-16 container dark:bg-black mx-auto  px-4 py-8">      
       <div className="flex flex-col pt-14 max-sm:pt-8 md:flex-row gap-8">
 
         

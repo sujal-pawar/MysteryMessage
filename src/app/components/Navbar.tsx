@@ -1,144 +1,146 @@
 "use client"
-import { Link as LucideLink, Menu, X, User as UserIcon } from 'lucide-react'
+
+import { Menu, X, User as UserIcon } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
 import React, { useState, useEffect } from 'react'
-import { User } from 'next-auth'
 import { Button } from './ui/button'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { ThemeToggle } from './ThemeToggle'
 import logo from "../assets/logo.png"
 import Image from "next/image"
+import ShinyText from './ShinyText'
+import { useTheme } from 'next-themes'
 
 const Navbar = () => {
-    const { data: session, status } = useSession()
-    const router = useRouter()
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-    const [mounted, setMounted] = useState(false)
+  const { data: session, status } = useSession()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const { theme, systemTheme } = useTheme()
 
-    // Fix hydration errors by ensuring client-side initialization happens after mounting
-    useEffect(() => {
-        setMounted(true)
-    }, [])
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
-    const toggleMobileMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen)
-    }
+  if (!mounted) return null
 
-    // Only render the complete UI after client-side mount
-    if (!mounted) {
-        return (
-            <nav className='fixed w-full p-4 md:p-6 bg-white dark:bg-black z-50'>
-                <div className='container mx-auto'>
-                    <div className='flex justify-between items-center'>
-                        <span className='text-xl font-bold'>MysteryMessage</span>
-                    </div>
+  const currentTheme = theme === 'system' ? systemTheme : theme
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  return (
+    <nav className="fixed w-full p-2 md:p-4 bg-white dark:bg-black z-50">
+      <div className="container mx-auto">
+        <div className="relative flex items-center justify-between md:justify-start">
+          {/* Desktop: Left - Logo */}
+          <Link href="/" className="hidden md:block">
+            <Image src={logo} alt="MysteryMessage logo" width={60} height={30} />
+          </Link>
+
+          {/* Desktop: Center - ShinyText */}
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2">
+            <h1 className="text-4xl font-bold text-center font-serif">
+              <ShinyText text="MystreyMessage" disabled={false} speed={3} className="custom-class" />
+            </h1>
+          </div>
+
+          {/* Desktop: Right - ThemeToggle + Session */}
+          <div className="hidden md:flex items-center gap-3 ml-auto">
+            <ThemeToggle />
+            {status === 'loading' ? (
+              <span className="text-sm">Loading...</span>
+            ) : session ? (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <UserIcon className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium">{session.user.username}</span>
                 </div>
-            </nav>
-        )
-    }
+                <Button size="sm" onClick={() => signOut({ callbackUrl: '/' })}>
+                  Log Out
+                </Button>
+              </div>
+            ) : (
+              <Link href="/sign-in">
+                <Button size="sm">Log in</Button>
+              </Link>
+            )}
+          </div>
 
-    return (
-        <nav className='fixed w-full p-2 md:p-4 bg-white dark:bg-black z-50'>
-            <div className='container mx-auto'>
-                {/* Desktop Navigation */}
-                <div className='hidden md:flex justify-between items-center'>
-                    <Link href="/" className=''>
-                        <Image src={logo} alt="MysteryMessage logo" width={60} height={30} />
-                    </Link>
+          {/* Mobile: Left - Logo */}
+          <Link href="/" className="md:hidden">
+            <Image src={logo} alt="MysteryMessage logo" width={50} height={30} />
+          </Link>
 
-                    <div className="flex items-center gap-6">
+          {/* Mobile: Center - ShinyText */}
+          <div className="flex-1 flex justify-center md:hidden">
+            <h1 className="text-2xl font-bold font-serif text-black dark:text-white">
+              <ShinyText
+                text="MystreyMessage"
+                disabled={currentTheme === 'light'}
+                speed={3}
+              />
+            </h1>
+          </div>
 
-                        <div className="flex items-center gap-3">
-                            <ThemeToggle />
+          {/* Mobile: Right - ThemeToggle + Hamburger */}
+          <div className="flex items-center gap-2 md:hidden">
+            
+            <button
+              className="p-2 rounded-md focus:outline-none"
+              onClick={toggleMobileMenu}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
 
-                            {status === 'loading' ? (
-                                <span className="text-sm">Loading...</span>
-                            ) : session ? (
-                                <div className="flex items-center gap-4">
-                                    <div className="flex items-center gap-2">
-                                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                            <UserIcon className="h-4 w-4 text-primary" />
-                                        </div>
-                                        <span className="text-sm font-medium">{session.user.username}</span>
-                                    </div>
-                                    <Button
-                                        size="sm"
-                                        onClick={() => signOut({ callbackUrl: '/' })}
-                                    >
-                                        Log Out
-                                    </Button>
-                                </div>
-                            ) : (
-                                <Link href="/sign-in">
-                                    <Button size="sm">Log in</Button>
-                                </Link>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Mobile Navigation */}
-                <div className='flex md:hidden justify-between items-center'>
-                <Link href="/" className=''>
-                <Image src={logo} alt="MysteryMessage logo" width={50} height={30} />
-                    </Link>
-
-                    <div className="flex items-center gap-2">
-                        <ThemeToggle />
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={toggleMobileMenu}
-                            aria-label="Toggle menu"
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="h-5 w-5" />
-                            ) : (
-                                <Menu className="h-5 w-5" />
-                            )}
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Mobile Menu */}
-                {isMobileMenuOpen && (
-                    <div className="md:hidden pt-4 pb-2 px-2 space-y-4 border-t dark:border-gray-800 mt-4">
-
-                        {status === 'loading' ? (
-                            <span className="block py-2 text-sm">Loading...</span>
-                        ) : session ? (
-                            <>
-                                <div className="flex items-center gap-2 py-2">
-                                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                        <UserIcon className="h-4 w-4 text-primary" />
-                                    </div>
-                                    <span className="text-sm font-medium">{session.user.username}</span>
-                                </div>
-                                <Button
-                                    className='w-full'
-                                    onClick={() => {
-                                        signOut({ callbackUrl: '/' })
-                                        setIsMobileMenuOpen(false)
-                                    }}
-                                >
-                                    Log Out
-                                </Button>
-                            </>
-                        ) : (
-                            <Link
-                                href="/sign-in"
-                                className="block"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                                <Button className='w-full'>Log in</Button>
-                            </Link>
-                        )}
-                    </div>
-                )}
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden flex flex-col justify-center items-center pt-4 pb-2 px-2 space-y-4 border-t dark:border-gray-800 mt-4">
+            
+            <div>
+            <ThemeToggle/>
             </div>
-        </nav>
-    )
+            
+            {status === 'loading' ? (
+              <span className="block py-2 text-sm">Loading...</span>
+            ) : session ? (
+              <>
+                <div className="flex items-center gap-2 py-2">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <UserIcon className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium">{session.user.username}</span>
+                </div>
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    signOut({ callbackUrl: '/' })
+                    setIsMobileMenuOpen(false)
+                  }}
+                >
+                  Log Out
+                </Button>
+              </>
+            ) : (
+              <Link
+                href="/sign-in"
+                className="block"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Button className="w-full">Log in</Button>
+              </Link>
+            )}
+            
+          </div>
+        )}
+      </div>
+    </nav>
+  )
 }
 
 export default Navbar

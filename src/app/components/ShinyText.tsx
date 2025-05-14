@@ -1,4 +1,4 @@
-import '@/app/globals.css';
+"use client";
 
 interface ShinyTextProps {
     text: string;

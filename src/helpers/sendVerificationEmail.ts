@@ -7,7 +7,7 @@ export async function sendVerificationEmail(
     username: string,
     verifyCode: string,
 ): Promise<APIResponse> {
-    try {
+        try {
         // Check if the Resend API key is configured
         const apiKey = process.env.RESEND_API_KEY || process.env.RESEND_APIKEY;
         if (!apiKey) {
@@ -131,5 +131,5 @@ Mystery Message Team
             success: false,
             message: 'Failed to send verification mail: ' + errorDetails
         };
+        }
     }
-}
