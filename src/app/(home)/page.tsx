@@ -233,7 +233,7 @@ export default function page() {
             </div>
           </section>
 
-          <section className="w-full px-4 py-16 dark:text-white font-bold  text-center">
+          <section className="w-full px-4 py-22 dark:text-white font-bold  text-center">
             <h2 className="text-4xl max-sm:text-4xl max-sm:py-4 font-semibold mb-4">Ready to get honest feedback?</h2>
             <Button
                   size="lg"

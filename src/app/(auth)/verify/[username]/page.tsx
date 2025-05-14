@@ -11,7 +11,7 @@ import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from "sonner"
 import * as z from 'zod'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { Loader2, AlertCircle, KeyRound, RefreshCw } from 'lucide-react'
 
 const VerifyAccount = () => {
     const router = useRouter()
@@ -22,6 +22,7 @@ const VerifyAccount = () => {
     const [isResending, setIsResending] = useState(false)
     const [devVerificationCode, setDevVerificationCode] = useState<string | null>(null)
     const [isDevMode, setIsDevMode] = useState(false)
+    const [mounted, setMounted] = useState(false)
 
     const form = useForm<z.infer<typeof verifySchema>>({
         resolver: zodResolver(verifySchema),
@@ -29,6 +30,8 @@ const VerifyAccount = () => {
             code: ''
         }
     })
+
+    useEffect(() => setMounted(true), []);
 
     // Check local storage for saved verification code
     useEffect(() => {
@@ -103,22 +106,26 @@ const VerifyAccount = () => {
         }
     }
 
+    if (!mounted) return null;
+
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-black transition-colors">
-            <div className="w-full max-w-md p-8 space-y-8 bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-black/40 transition-colors">
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Verify Your Account</h1>
-                    <p className="mt-2 text-gray-600 dark:text-gray-300">
+        <div className="flex justify-center items-center min-h-screen py-8 px-4 bg-white text-black dark:bg-black dark:text-white transition-colors">
+            <div className="w-full max-w-md p-6 md:p-8 space-y-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg dark:shadow-blue-900/10">
+                <div className="text-center space-y-2">
+                    <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-700 to-blue-500 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">
+                        Verify Your Account
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-400">
                         Please enter the verification code sent to your email
                     </p>
                 </div>
 
                 {devVerificationCode && (
-                    <div className="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-md p-4 my-4 transition-colors">
+                    <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-md p-4 transition-colors">
                         <div className="flex items-start">
-                            <AlertCircle className="h-5 w-5 text-blue-500 dark:text-blue-300 mr-2 mt-0.5" />
+                            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5 flex-shrink-0" />
                             <div>
-                                <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">Development Mode</h3>
+                                <h3 className="text-sm font-medium text-blue-800 dark:text-blue-300">Development Mode</h3>
                                 <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
                                     Verification code: <span className="font-mono font-semibold">{devVerificationCode}</span>
                                 </p>
@@ -131,18 +138,18 @@ const VerifyAccount = () => {
                 )}
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
                             name="code"
                             control={form.control}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-gray-700 dark:text-gray-300">Verification Code</FormLabel>
+                                    <FormLabel className="text-gray-700 dark:text-gray-300 font-medium">Verification Code</FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="Enter 6-digit code"
                                             {...field}
-                                            className="placeholder-gray-400 dark:placeholder-gray-500"
+                                            className="placeholder:text-gray-400 dark:placeholder:text-gray-500 bg-white dark:bg-gray-800"
                                         />
                                     </FormControl>
                                     <FormMessage className="text-red-600 dark:text-red-400" />
@@ -154,15 +161,21 @@ const VerifyAccount = () => {
                             <Button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+                                className="w-full h-11 font-medium transition-all"
+                                style={{
+                                    background: "linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6)",
+                                }}
                             >
                                 {isSubmitting ? (
                                     <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                                         Verifying...
                                     </>
                                 ) : (
-                                    "Verify Account"
+                                    <>
+                                        <KeyRound className="h-5 w-5 mr-1" />
+                                        Verify Account
+                                    </>
                                 )}
                             </Button>
                             <Button
@@ -170,15 +183,18 @@ const VerifyAccount = () => {
                                 variant="outline"
                                 onClick={resendVerificationCode}
                                 disabled={isResending}
-                                className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                className="w-full h-11 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                             >
                                 {isResending ? (
                                     <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                                         Resending...
                                     </>
                                 ) : (
-                                    "Resend Verification Code"
+                                    <>
+                                        <RefreshCw className="h-5 w-5 mr-1" />
+                                        Resend Verification Code
+                                    </>
                                 )}
                             </Button>
                         </div>

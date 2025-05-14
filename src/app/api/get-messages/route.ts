@@ -1,8 +1,8 @@
 import { getSession } from "next-auth/react";
 import { authOptions } from "../auth/[...nextauth]/options";
 import dbConnect from "@/lib/dbConnect";
-import UserModel from "@/model/User";
-import {getServerSession, User} from "next-auth";
+import UserModel, { User as UserType } from "@/model/User";
+import { getServerSession, User } from "next-auth";
 import mongoose from "mongoose";
 
 export async function GET(request:Request){
@@ -20,23 +20,30 @@ export async function GET(request:Request){
     console.log("User from session:", user._id);
     
     try{
-        const userId = new mongoose.Types.ObjectId(user._id);
-        console.log("Looking for messages for user ID:", userId.toString());
+        // Find user by email instead of ID to handle both credential and OAuth logins
+        const userEmail = user.email;
         
-        // First check if the user exists at all
-        const userExists = await UserModel.findById(userId);
-        if (!userExists) {
-            console.log("User not found in database:", userId);
+        if (!userEmail) {
+            return Response.json({
+                success: false,
+                message: 'User email not found in session'
+            }, { status: 401 });
+        }
+        
+        // First find the user by email
+        const userDoc = await UserModel.findOne({ email: userEmail });
+        if (!userDoc) {
+            console.log("User not found in database for email:", userEmail);
             return Response.json({
                 success: false,
                 message: 'User not found in database'
             }, { status: 404 });
         }
         
-        console.log("User found, checking for messages. Has messages:", userExists.messages?.length || 0);
+        console.log("User found, checking for messages. Has messages:", userDoc.messages?.length || 0);
         
         // If user has no messages, return an empty array instead of 404
-        if (!userExists.messages || userExists.messages.length === 0) {
+        if (!userDoc.messages || userDoc.messages.length === 0) {
             console.log("User has no messages");
             return Response.json({
                 success: true,
@@ -46,7 +53,7 @@ export async function GET(request:Request){
         
         // If user has messages, proceed with aggregation
         const result = await UserModel.aggregate([
-            { $match: { _id: userId } },
+            { $match: { _id: userDoc._id } },
             { $unwind: '$messages' },
             { $sort: { 'messages.createdAt': -1 } },
             { $group: { _id: '$_id', messages: { $push: '$messages' } } }

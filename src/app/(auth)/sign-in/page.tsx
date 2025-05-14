@@ -6,17 +6,22 @@ import * as z from "zod";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/components/ui/form";
 import { Input } from "@/app/components/ui/input";
 import { Button } from "@/app/components/ui/button";
 import { signinSchema } from "@/schemas/signinSchema";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogIn } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 
-const SignInPage = () => {
+const SignInPage: React.FC = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
@@ -33,39 +38,49 @@ const SignInPage = () => {
       });
 
       if (result?.error) {
-        toast(result.error || "Incorrect username or password");
+        toast.error(result.error || "Incorrect username or password");
         return;
       }
 
-      toast("Login successful!");
+      toast.success("Login successful!");
       router.push("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
-      toast("An error occurred during login. Please try again.");
+      toast.error("An error occurred during login. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const handleGoogle = async () => {
+    setIsGoogleLoading(true);
+    await signIn("google", { callbackUrl: "/dashboard" });
+    setIsGoogleLoading(false);
+  };
+
+  if (!mounted) return null;
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-black transition-colors">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-black/40 transition-colors">
-        <h1 className="text-4xl font-serif font-bold text-center text-gray-800 dark:text-gray-100">
-          MysteryMessage
-        </h1>
+    <div className="flex w-full justify-center items-center min-h-screen py-8 px-4 bg-white text-black dark:bg-black dark:text-white transition-colors">
+      <div className="w-full max-w-md p-6 md:p-8 pb-12 space-y-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-lg dark:shadow-blue-900/10">
+        <div className="text-center py-4 space-y-2">
+          <h1 className="text-4xl font-extrabold ">MysteryMessage</h1>
+          <p className="text-gray-600 dark:text-gray-400">Sign in to your account</p>
+        </div>
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FormField
               name="identifier"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 dark:text-gray-300">Email or Username</FormLabel>
+                  <FormLabel className="text-gray-700 dark:text-gray-300 font-medium">Email or Username</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="email or username"
+                      placeholder="Enter your email or username"
                       {...field}
-                      className="placeholder-gray-400 dark:placeholder-gray-500"
+                      className="placeholder:text-gray-400 dark:placeholder:text-gray-500 bg-white dark:bg-gray-800"
                     />
                   </FormControl>
                   <FormMessage className="text-red-600 dark:text-red-400" />
@@ -77,13 +92,13 @@ const SignInPage = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 dark:text-gray-300">Password</FormLabel>
+                  <FormLabel className="text-gray-700 dark:text-gray-300 font-medium">Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="password"
+                      placeholder="Enter your password"
                       {...field}
-                      className="placeholder-gray-400 dark:placeholder-gray-500"
+                      className="placeholder:text-gray-400 dark:placeholder:text-gray-500 bg-white dark:bg-gray-800"
                     />
                   </FormControl>
                   <FormMessage className="text-red-600 dark:text-red-400" />
@@ -93,25 +108,56 @@ const SignInPage = () => {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors"
+              className="w-full h-11 dark:text-white font-medium transition-all"
+              style={{
+                background: "linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6)",
+              }}
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Signing in...
                 </>
               ) : (
-                "Sign In"
+                <>
+                  <LogIn className="h-5 w-5 mr-1" />
+                  Sign In
+                </>
               )}
             </Button>
           </form>
         </Form>
-        <p className="text-center text-gray-700 dark:text-gray-300">
-          New member?{" "}
-          <Link href="/sign-up" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 transition-colors">
-            Sign Up
-          </Link>
-        </p>
+
+        <div className="my-4 flex items-center">
+          <hr className="flex-grow border-gray-300 dark:border-gray-700" />
+          <span className="px-2 text-gray-500 dark:text-gray-400">or</span>
+          <hr className="flex-grow border-gray-300 dark:border-gray-700" />
+        </div>
+
+        <Button
+          variant="outline"
+          disabled={isGoogleLoading}
+          onClick={handleGoogle}
+          className="w-full h-11 font-medium transition-all"
+        >
+          {isGoogleLoading ? (
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          ) : (
+            <FcGoogle className="h-5 w-5 mr-2" />
+          )}
+          <span className="flex items-center justify-center">
+            {isGoogleLoading ? `Signing in with Google...` : `Sign in with Google`}
+          </span>
+        </Button>
+
+        <div className="pt-4 text-center border-t border-gray-200 dark:border-gray-700">
+          <p className="text-gray-700 dark:text-gray-300 text-sm">
+            New to MysteryMessage?{' '}
+            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors">
+              Create an account
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

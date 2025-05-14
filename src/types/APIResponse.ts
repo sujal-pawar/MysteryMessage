@@ -6,4 +6,5 @@ export interface APIResponse {
     isAcceptingMessages?: boolean;
     messages?: Array<Message>;  
     verificationCode?: string; // For development environment only
+    suggestions?: string; // For message suggestions separated by '||'
 }

@@ -20,13 +20,33 @@ export async function POST(request:Request){
         )
     }
 
-    const userId=user._id;
+    const userEmail = user.email;
+    if (!userEmail) {
+        return Response.json(
+            {
+                success:false,
+                message:'User email not found in session'
+            },
+            {status:401}
+        )
+    }
+
     const {acceptMessages}=await request.json()
 
     try{
+        const userDoc = await UserModel.findOne({ email: userEmail });
+        if (!userDoc) {
+            return Response.json(
+                {
+                    success:false,
+                    message:'User not found in database'
+                },
+                {status:404}
+            )
+        }
 
         const updatedUser = await UserModel.findByIdAndUpdate(
-            userId,
+            userDoc._id,
             {isAcceptingMessages:acceptMessages},
             {new:true}
         )
@@ -75,10 +95,20 @@ export async function GET(request:Request){
         )
     }
 
-    const userId = user._id;
+    const userEmail = user.email;
+    if (!userEmail) {
+        return Response.json(
+            {
+                success:false,
+                message:'User email not found in session'
+            },
+            {status:401}
+        )
+    }
 
-    try{const foundUser = await UserModel.findById(userId)
-        if(!foundUser){
+    try{
+        const foundUser = await UserModel.findOne({ email: userEmail });
+        if (!foundUser) {
             return Response.json(
                 {
                     success:false,
@@ -96,7 +126,7 @@ export async function GET(request:Request){
             {status:200}
         )
     }
-    catch{
+    catch(error){
         console.log('failed to update user status to accept messages')
         return Response.json(
             {
@@ -106,5 +136,4 @@ export async function GET(request:Request){
             {status:500}
         )
     }
-
 }

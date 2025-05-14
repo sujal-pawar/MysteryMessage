@@ -34,9 +34,9 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ThemeProvider>
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col dark:bg-black">
               <Navbar/>
-              <main className="flex-1 pt-14">
+              <main className="flex-1 pt-14 dark:bg-black">
                 {children}
               </main>
               <Footer/>
