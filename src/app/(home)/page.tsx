@@ -155,7 +155,9 @@ export default function page() {
           </section>
 
           <section className="w-full px-4 py-16 bg-gray-50 dark:bg-black">
-            <div className="mx-auto max-w-4xl space-y-12">
+          
+            <div className="mx-auto max-w-4xl space-y-12">              
+            <h1 className="text-6xl max-sm:text-4xl font-bold dark:text-white">Steps for getting started</h1>
               {/* Step 1 */}
               <div className="flex flex-col md:flex-row items-start md:items-center">
                 <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white flex items-center justify-center rounded-full mb-4 md:mb-0">

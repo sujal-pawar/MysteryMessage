@@ -140,10 +140,10 @@ const UserMessagePage = () => {
         <div className="md:w-1/3 bg-white dark:bg-black rounded-lg shadow-md p-6">
           <div className="flex justify-between dark:bg-black items-center mb-4">
             <h2 className="text-xl font-semibold">Suggested Messages</h2>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={fetchSuggestions} 
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchSuggestions}
               disabled={suggestLoading}
               className="flex items-center gap-1"
             >
@@ -173,20 +173,20 @@ const UserMessagePage = () => {
         </div>
       </div>
       <section className="w-full px-4 py-22 dark:text-white font-bold  text-center">
-            <h2 className="text-4xl max-sm:text-4xl max-sm:py-4 font-semibold mb-4">Ready to get honest feedback?</h2>
-            <Button
-                  size="lg"
-                  className="text-white font-semibold px-6 py-3 rounded-lg  shadow-lg"
-                  style={{
-                    background: "linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6)",
-                  }}                  
-                  aria-label="Get started with MysteryMessage"
-                >
-                  <Link href={"/sign-up"}>
-              Try MysteryMessage
-              </Link>
-            </Button>
-          </section>
+        <h2 className="text-4xl max-sm:text-4xl max-sm:py-4 font-semibold mb-4">Ready to get honest feedback?</h2>
+        <Button
+          size="lg"
+          className="text-white font-semibold px-6 py-3 rounded-lg  shadow-lg"
+          style={{
+            background: "linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6)",
+          }}
+          aria-label="Get started with MysteryMessage"
+        >
+          <Link href={"/sign-up"}>
+            Try MysteryMessage
+          </Link>
+        </Button>
+      </section>
     </div>
   );
 };
