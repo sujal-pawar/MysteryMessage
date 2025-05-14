@@ -41,7 +41,7 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Connect</h3>
             <div className="flex space-x-4">
-              <a href="mailto:contact@mysterymessage.com" aria-label="Email" className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
+              <a href="mailto:sujalpawar00007@gmail.com" aria-label="Email" className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
                 <Mail className="h-5 w-5" />
               </a>
               <a href="https://github.com/sujal-pawar" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">

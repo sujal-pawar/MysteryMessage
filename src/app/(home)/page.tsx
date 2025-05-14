@@ -240,10 +240,12 @@ export default function page() {
                   className="text-white font-semibold px-6 py-3 rounded-lg  shadow-lg"
                   style={{
                     background: "linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6)",
-                  }}
+                  }}                  
                   aria-label="Get started with MysteryMessage"
                 >
+                  <Link href={"/sign-up"}>
               Try MysteryMessage
+              </Link>
             </Button>
           </section>
 
