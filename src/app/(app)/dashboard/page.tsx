@@ -118,7 +118,7 @@ function UserDashboard() {
             disabled
             className="input input-bordered w-full p-2 mr-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded transition-colors"
           />
-          <Button onClick={copyToClipboard} className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors">
+          <Button onClick={copyToClipboard} className="bg-blue-600 dark:text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 transition-colors">
             Copy
           </Button>
         </div>
