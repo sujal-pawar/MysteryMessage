@@ -45,6 +45,13 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     }),
     CredentialsProvider({
       id: "credentials",
@@ -145,14 +152,16 @@ export const authOptions: NextAuthOptions = {
       return session;
     }
   },
-
   pages: {
-    signIn: "/sign-in"
+    signIn: "/sign-in",
+    error: "/sign-in" // Redirect to sign-in page on error with error message in URL
   },
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60 // 30 days
   },
-  secret: process.env.AUTH_SECRET
+  debug: process.env.NODE_ENV === "development",
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET
 };
 
 export default NextAuth(authOptions);

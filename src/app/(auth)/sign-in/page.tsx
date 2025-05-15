@@ -18,32 +18,71 @@ import { FcGoogle } from "react-icons/fc";
 const SignInPage: React.FC = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);  const [mounted, setMounted] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    
+    // Check for error parameters in URL
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get('error');
+    if (error) {
+      switch(error) {
+        case 'CredentialsSignin':
+          setAuthError('Invalid username/email or password');
+          break;
+        case 'OAuthAccountNotLinked':
+          setAuthError('Email already used with different provider');
+          break;
+        case 'OAuthSignin':
+        case 'OAuthCallback':
+          setAuthError('Error signing in with Google');
+          break;
+        case 'AccessDenied':
+          setAuthError('Account not verified');
+          break;
+        default:
+          setAuthError('An error occurred during sign in');
+      }
+      toast.error(authError || 'Authentication failed');
+    }
+  }, [authError]);
 
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: { identifier: "", password: "" }
   });
-
   const onSubmit = async (data: z.infer<typeof signinSchema>) => {
     try {
       setIsSubmitting(true);
       const result = await signIn("credentials", {
         redirect: false,
         identifier: data.identifier,
-        password: data.password
+        password: data.password,
+        callbackUrl: '/dashboard'
       });
 
       if (result?.error) {
+        console.error("Authentication error:", result.error);
         toast.error(result.error || "Incorrect username or password");
         return;
       }
 
+      if (!result?.ok) {
+        toast.error("Failed to sign in. Please try again.");
+        return;
+      }
+
       toast.success("Login successful!");
-      router.push("/dashboard");
+      
+      // Use absolute URL or Next.js router depending on environment
+      if (result.url) {
+        // More reliable in production environments
+        window.location.href = result.url;
+      } else {
+        router.push("/dashboard");
+      }
     } catch (error) {
       console.error("Login error:", error);
       toast.error("An error occurred during login. Please try again.");
@@ -51,11 +90,21 @@ const SignInPage: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
   const handleGoogle = async () => {
-    setIsGoogleLoading(true);
-    await signIn("google", { callbackUrl: "/dashboard" });
-    setIsGoogleLoading(false);
+    try {
+      setIsGoogleLoading(true);
+      // Using absolute URL for production compatibility
+      const callbackUrl = new URL('/dashboard', window.location.origin).toString();
+      await signIn("google", { 
+        callbackUrl,
+        redirect: true
+      });
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      toast.error('Error signing in with Google. Please try again.');
+    } finally {
+      setIsGoogleLoading(false);
+    }
   };
 
   if (!mounted) return null;
