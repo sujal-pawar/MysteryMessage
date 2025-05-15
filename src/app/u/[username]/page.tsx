@@ -99,12 +99,29 @@ const UserMessagePage = () => {
   );
 
   if (!isAcceptingMessages) return (
+    <>
     <div className="container mx-auto px-4 py-16 max-w-md">
       <div className="bg-white dark:bg-black rounded-lg shadow-md p-8 text-center">
         <h1 className="text-2xl font-bold mb-4">Messages Disabled</h1>
         <p className="text-gray-600 dark:text-gray-300">This user is not accepting messages.</p>
       </div>
-    </div>
+      </div>
+      <section className="w-full px-4 py-8 dark:text-white font-bold  text-center">
+        <h2 className="text-4xl max-sm:text-2xl py-2 font-semibold mb-4">Want unfiltered thoughts from your friends?</h2>
+        <Button
+          size="lg"
+          className="text-white font-semibold px-6 py-3 rounded-lg  shadow-lg"
+          style={{
+            background: "linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6)",
+          }}
+          aria-label="Get started with MysteryMessage"
+        >
+          <Link href={"/sign-up"}>
+            Try MysteryMessage
+          </Link>
+        </Button>
+      </section>
+      </>
   );
 
   if (submitted) return (
@@ -118,8 +135,8 @@ const UserMessagePage = () => {
   );
 
   return (
-    <div className="pt-16 container dark:bg-black mx-auto  px-4 py-8">      
-      <div className="flex flex-col pt-14 max-sm:pt-8 md:flex-row gap-8">
+    <div className="pt-16 container dark:bg-black mx-auto  px-4 max-sm:px-1 max-sm:py-2 py-8">      
+      <div className="flex flex-col pt-14 max-sm:pt-1 md:flex-row gap-8">
 
         
 
@@ -177,7 +194,7 @@ const UserMessagePage = () => {
         </div>
       </div>
       <section className="w-full px-4 py-22 dark:text-white font-bold  text-center">
-        <h2 className="text-4xl max-sm:text-4xl py-2 max-sm:py-4 font-semibold mb-4">Ready to get honest feedback?</h2>
+        <h2 className="text-4xl max-sm:text-2xl py-2 max-sm:py-2 font-bold mb-4">Curious what others truly think of you?</h2>
         <Button
           size="lg"
           className="text-white font-semibold px-6 py-3 rounded-lg  shadow-lg"

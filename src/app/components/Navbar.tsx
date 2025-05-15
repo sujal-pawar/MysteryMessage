@@ -41,9 +41,16 @@ const Navbar = () => {
           {/* Desktop: Center - ShinyText */}
           <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2">
             <h1 className="text-4xl font-bold text-center font-serif">
-              <ShinyText text="MystreyMessage" disabled={false} speed={3} className="custom-class" />
+              {/* Light mode text */}
+              <span className="dark:hidden">MysteryMessage</span>
+
+              {/* Dark mode shiny text */}
+              <span className="hidden dark:inline">
+                <ShinyText text="MysteryMessage" disabled={false} speed={3} className="custom-class" />
+              </span>
             </h1>
           </div>
+
 
           {/* Desktop: Right - ThemeToggle + Session */}
           <div className="hidden md:flex items-center gap-3 ml-auto">
@@ -56,7 +63,7 @@ const Navbar = () => {
                   <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                     <UserIcon className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="text-sm font-medium">{session.user.username}</span>
+                  <Link href={"/dashboard"}><span className="text-sm font-medium">{session.user.username}</span></Link>
                 </div>
                 <Button size="sm" onClick={() => signOut({ callbackUrl: '/' })}>
                   Log Out
@@ -77,17 +84,18 @@ const Navbar = () => {
           {/* Mobile: Center - ShinyText */}
           <div className="flex-1 flex justify-center md:hidden">
             <h1 className="text-2xl font-bold font-serif text-black dark:text-white">
-              <ShinyText
-                text="MystreyMessage"
-                disabled={currentTheme === 'light'}
-                speed={3}
-              />
+              <span className="dark:hidden">MysteryMessage</span>
+              <span className="hidden dark:inline">
+                <ShinyText text="MysteryMessage" disabled={false} speed={3} className="custom-class" />
+              </span>
             </h1>
           </div>
 
+
+
           {/* Mobile: Right - ThemeToggle + Hamburger */}
           <div className="flex items-center gap-2 md:hidden">
-            
+
             <button
               className="p-2 rounded-md focus:outline-none"
               onClick={toggleMobileMenu}
@@ -101,20 +109,24 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden flex flex-col justify-center items-center pt-4 pb-2 px-2 space-y-4 border-t dark:border-gray-800 mt-4">
-            
-            <div>
-            <ThemeToggle/>
-            </div>
-            
+
+
+
             {status === 'loading' ? (
               <span className="block py-2 text-sm">Loading...</span>
             ) : session ? (
               <>
-                <div className="flex items-center gap-2 py-2">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <UserIcon className="h-4 w-4 text-primary" />
-                  </div>
-                  <span className="text-sm font-medium">{session.user.username}</span>
+                <div className="flex w-full flex-row justify-between gap-2 py-2">
+                  <div className='flex justify-center items-center gap-2'>
+
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <UserIcon className="h-4 w-4 text-primary" />
+                    </div>
+                    <Link href={"/dashboard"}><span className="text-sm font-medium">{session.user.username}</span></Link>
+                    </div>  
+                    <div>
+                      <ThemeToggle />
+                    </div>
                 </div>
                 <Button
                   className="w-full"
@@ -135,7 +147,7 @@ const Navbar = () => {
                 <Button className="w-full">Log in</Button>
               </Link>
             )}
-            
+
           </div>
         )}
       </div>

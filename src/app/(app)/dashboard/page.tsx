@@ -102,7 +102,7 @@ function UserDashboard() {
   const usernameforDashboard = session?.user?.username || session?.user?.email || 'User';
 
   return (
-    <div className="pt-14 w-full px-10 md:mx-8 lg:mx-auto p-6 bg-white dark:bg-black rounded  transition-colors">
+    <div className="pt-14 max-sm:px-6 w-full px-10 md:mx-8 lg:mx-auto p-6 bg-white dark:bg-black rounded  transition-colors">
       <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100">
         Welcome, {usernameforDashboard}
       </h1>
