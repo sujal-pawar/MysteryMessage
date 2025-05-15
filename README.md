@@ -26,7 +26,10 @@ Whether you’re a developer diving into the codebase or a contributor eager to 
 
 Leveraging the power of **TypeScript** and the flexibility of Next.js, the project emphasizes scalability, maintainability, and performance, making it a robust foundation for future enhancements.
 
----
+**Note:**
+Currently, only Google Sign-In works for creating accounts. The resend email service requires a paid domain to send emails to users, while the free tier only sends emails to the developer’s address. Because of this limitation, email-based signup isn’t fully functional yet. Google authentication is the recommended and fully working option for now.
+
+
 
 ## 🚀 Features
 
