@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "vercel-build": "rm -rf .next && next build",
+    "beta-build": "rm -rf .next && cp .env.beta .env.production && next build",
     "start": "next start",
     "lint": "next lint"
   },

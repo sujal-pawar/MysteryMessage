@@ -2,6 +2,15 @@
   "version": 2,
   "buildCommand": "npm run vercel-build",
   "rewrites": [
+    { "source": "/api/auth/:path*", "destination": "/api/auth/:path*" },
     { "source": "/(.*)", "destination": "/" }
+  ],
+  "headers": [
+    {
+      "source": "/api/auth/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, max-age=0" }
+      ]
+    }
   ]
 }

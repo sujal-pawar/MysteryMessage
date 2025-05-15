@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 import { Types } from "mongoose";
+import { debugConfig } from "../debug-config";
 
 // Define a user type for MongoDB user
 interface UserDocument {
@@ -159,18 +160,27 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60 // 30 days
   },
-  // Enable debug for both development and production while troubleshooting
-  debug: true,
-  logger: {
-    error: (code, metadata) => {
-      console.error("NextAuth error:", code, metadata);
+  // Use the imported debug configuration
+  ...debugConfig,
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production"
+      }
     },
-    warn: (code) => {
-      console.warn("NextAuth warning:", code);
-    },
-    debug: (code, metadata) => {
-      console.log("NextAuth debug:", code, metadata);
-    },
+    callbackUrl: {
+      name: "next-auth.callback-url",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production"
+      }
+    }
   },
   secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET
 };

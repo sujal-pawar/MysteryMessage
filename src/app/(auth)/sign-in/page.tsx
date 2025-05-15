@@ -52,10 +52,17 @@ const SignInPage: React.FC = () => {
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: { identifier: "", password: "" }
-  });
-  const onSubmit = async (data: z.infer<typeof signinSchema>) => {
+  });  const onSubmit = async (data: z.infer<typeof signinSchema>) => {
     try {
       setIsSubmitting(true);
+      
+      // Log environment info
+      console.log("Sign-in attempt environment:", {
+        hostname: window.location.hostname,
+        origin: window.location.origin,
+        href: window.location.href
+      });
+      
       const result = await signIn("credentials", {
         redirect: false,
         identifier: data.identifier,
@@ -64,23 +71,33 @@ const SignInPage: React.FC = () => {
       });
 
       if (result?.error) {
-        console.error("Authentication error:", result.error);
+        console.error("Authentication error:", {
+          error: result.error,
+          status: result.status,
+          ok: result.ok,
+          url: result.url
+        });
         toast.error(result.error || "Incorrect username or password");
         return;
       }
 
       if (!result?.ok) {
+        console.error("Sign-in not OK:", result);
         toast.error("Failed to sign in. Please try again.");
         return;
       }
 
       toast.success("Login successful!");
       
-      // Use absolute URL or Next.js router depending on environment
+      // More verbose redirection with fallbacks
+      console.log("Successful sign-in, redirecting with:", result);
+      
+      // Always use the URL from result when available
       if (result.url) {
-        // More reliable in production environments
+        console.log("Redirecting to:", result.url);
         window.location.href = result.url;
       } else {
+        console.log("No URL in result, using router");
         router.push("/dashboard");
       }
     } catch (error) {
@@ -92,11 +109,20 @@ const SignInPage: React.FC = () => {
   };  const handleGoogle = async () => {
     try {
       setIsGoogleLoading(true);
-      // Hard-code the production callback URL for consistency
+      
+      // Determine the correct callback URL based on hostname
+      const hostname = window.location.hostname;
+      
+      // Add callback URL based on current hostname
       const callbackUrl = "/dashboard";
       
-      // Log sign-in attempt
-      console.log("Starting Google sign-in with callback:", callbackUrl);
+      // Log sign-in attempt with environment details
+      console.log("Starting Google sign-in:", {
+        callbackUrl,
+        hostname,
+        origin: window.location.origin,
+        href: window.location.href
+      });
       
       await signIn("google", { 
         callbackUrl,

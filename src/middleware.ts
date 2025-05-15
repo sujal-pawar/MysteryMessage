@@ -5,11 +5,17 @@ import {getToken} from "next-auth/jwt"
  
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
+    // Use either AUTH_SECRET or NEXTAUTH_SECRET for better compatibility
+    const secret = process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET;
+    
     const token = await getToken({
         req: request,
-        secret: process.env.AUTH_SECRET,
+        secret,
     })
     const url = request.nextUrl
+
+    // Debug middleware execution in production
+    console.log(`[Middleware] Path: ${url.pathname}, Has token: ${!!token}, Host: ${request.headers.get('host')}`);
 
     // If user is authenticated and trying to access auth pages, redirect to dashboard
     if(token &&(
@@ -18,11 +24,13 @@ export async function middleware(request: NextRequest) {
         url.pathname.startsWith('/verify') ||
         url.pathname==='/'
     ) ){
+        console.log(`[Middleware] Authenticated user accessing auth page, redirecting to dashboard`);
         return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
     // If user is not authenticated and trying to access protected pages, redirect to sign-in
     if (!token && url.pathname.startsWith('/dashboard')) {
+        console.log(`[Middleware] Unauthenticated user accessing dashboard, redirecting to sign-in`);
         return NextResponse.redirect(new URL('/sign-in', request.url))
     }
 
@@ -31,10 +39,15 @@ export async function middleware(request: NextRequest) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher:[ '/sign-in',
+  matcher:[ 
+    // Auth UI routes that need protection
+    '/sign-in',
     '/sign-up',
     '/',
     '/dashboard/:path*',
-    '/verify/:path*'
-]
+    '/verify/:path*',
+    
+    // Explicitly exclude auth API routes to prevent interference
+    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)'
+  ]
 }
