@@ -21,8 +21,7 @@ export async function middleware(request: NextRequest) {
     if(token &&(
         url.pathname.startsWith('/sign-in') ||
         url.pathname.startsWith('/sign-up') ||
-        url.pathname.startsWith('/verify') ||
-        url.pathname==='/'
+        url.pathname === '/'
     ) ){
         console.log(`[Middleware] Authenticated user accessing auth page, redirecting to dashboard`);
         return NextResponse.redirect(new URL('/dashboard', request.url))
@@ -39,15 +38,11 @@ export async function middleware(request: NextRequest) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher:[ 
+  matcher: [
     // Auth UI routes that need protection
     '/sign-in',
     '/sign-up',
     '/',
-    '/dashboard/:path*',
-    '/verify/:path*',
-    
-    // Explicitly exclude auth API routes to prevent interference
-    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)'
+    '/dashboard/:path*'
   ]
 }

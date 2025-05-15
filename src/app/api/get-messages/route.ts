@@ -70,7 +70,7 @@ export async function GET(request:Request){
         }
 
         console.log("Returning messages count:", result[0].messages?.length || 0);
-        
+
         return Response.json({
             success: true,
             messages: result[0].messages || []
