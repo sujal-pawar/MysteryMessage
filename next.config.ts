@@ -13,12 +13,18 @@ const nextConfig = {
     // This helps with route group resolution issues
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
-  // Add a rewrite rule to handle NextAuth's _log endpoint
+  // Add rewrite rules to fix routing issues
   async rewrites() {
     return [
       {
+        // Handle NextAuth's _log endpoint
         source: '/api/auth/_log',
         destination: '/api/auth/dummy-log',
+      },
+      {
+        // Explicitly handle user message pages
+        source: '/u/:username',
+        destination: '/u/:username',
       },
     ];
   },
