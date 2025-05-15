@@ -89,12 +89,15 @@ const SignInPage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-  const handleGoogle = async () => {
+  };  const handleGoogle = async () => {
     try {
       setIsGoogleLoading(true);
-      // Using absolute URL for production compatibility
-      const callbackUrl = new URL('/dashboard', window.location.origin).toString();
+      // Hard-code the production callback URL for consistency
+      const callbackUrl = "/dashboard";
+      
+      // Log sign-in attempt
+      console.log("Starting Google sign-in with callback:", callbackUrl);
+      
       await signIn("google", { 
         callbackUrl,
         redirect: true

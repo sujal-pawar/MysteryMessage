@@ -151,16 +151,27 @@ export const authOptions: NextAuthOptions = {
       session.user.isAcceptingMessages = token.isAcceptingMessages as boolean;
       return session;
     }
-  },
-  pages: {
+  },  pages: {
     signIn: "/sign-in",
-    error: "/sign-in" // Redirect to sign-in page on error with error message in URL
+    error: "/auth-error" // Redirect to custom error page
   },
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60 // 30 days
   },
-  debug: process.env.NODE_ENV === "development",
+  // Enable debug for both development and production while troubleshooting
+  debug: true,
+  logger: {
+    error: (code, metadata) => {
+      console.error("NextAuth error:", code, metadata);
+    },
+    warn: (code) => {
+      console.warn("NextAuth warning:", code);
+    },
+    debug: (code, metadata) => {
+      console.log("NextAuth debug:", code, metadata);
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET
 };
 
