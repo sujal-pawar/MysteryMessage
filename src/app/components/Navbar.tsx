@@ -123,11 +123,13 @@ const Navbar = () => {
                       <UserIcon className="h-4 w-4 text-primary" />
                     </div>
                     <Link href={"/dashboard"}><span className="text-sm font-medium">{session.user.username}</span></Link>
-                    </div>  
-                    <div>
-                      <ThemeToggle />
-                    </div>
+                  </div>
+                  <div>
+                    <ThemeToggle />
+                  </div>
                 </div>
+                <div>
+               
                 <Button
                   className="w-full"
                   onClick={() => {
@@ -137,8 +139,11 @@ const Navbar = () => {
                 >
                   Log Out
                 </Button>
+                </div>
               </>
             ) : (
+              <div className='flex justify-between w-full'>               
+                         
               <Link
                 href="/sign-in"
                 className="block"
@@ -146,6 +151,8 @@ const Navbar = () => {
               >
                 <Button className="w-full">Log in</Button>
               </Link>
+              <ThemeToggle />     
+              </div>
             )}
 
           </div>
