@@ -28,7 +28,7 @@ export default function Page() {
       </Head>
 
       <div className="pt-12 min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors">
-        <main className="w-full flex flex-col items-center justify-center px-4 md:px-0">
+        <main className="w-full flex flex-col items-center justify-center md:px-0">
           {/* Hero Section */}
           <section className="text-center mb-12 max-w-4xl mx-auto">
             <div style={{ marginTop: '2rem' }}>
@@ -39,7 +39,7 @@ export default function Page() {
                   revealDirection="center"
                   speed={150}
                 />
-          </h1>
+              </h1>
             </div>
             <p className="mt-4 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               MysteryMessage is a secure platform where your identity remains a secret while you share honest feedback.
@@ -69,7 +69,7 @@ export default function Page() {
                 </Button>
               </Link>
             </div>
-        </section>
+          </section>
 
 
           {/* Features Section */}
@@ -93,19 +93,19 @@ export default function Page() {
             </Card>
 
             <Card className="bg-gray-100 dark:bg-gray-800">
-                  <CardHeader>
+              <CardHeader>
                 <CardTitle>Easy Integration</CardTitle>
-                  </CardHeader>
+              </CardHeader>
               <CardContent className="text-gray-700 dark:text-gray-300">
                 Seamlessly integrate with your existing tech stack via API endpoints.
               </CardContent>
             </Card>
           </section>
-          <div className="w-full py-4 mx-auto max-w-[100%] max-sm:w-[100%] md:max-w-[768px] lg:max-w-[1024px] xl:max-w-[1250px]">
+          <div className="w-full py-4 mx-auto">
             <ScrollVelocity
               texts={[
-                <span key="1" className="dark:text-blue-600 text-blue-700">MysteryMessage</span>,
-                <span key="2" className="dark:text-blue-300 text-blue-400">Anonymous Feedback</span>
+                <span key="1" className="dark:text-blue-600 text-blue-700">MysteryMessage </span>,
+                <span key="2" className="dark:text-blue-300 text-blue-400">Anonymous Feedbacks </span>
               ]}
               velocity={50}
               className="custom-scroll-text"
@@ -137,15 +137,15 @@ export default function Page() {
                 <h3 className="text-xl font-semibold mb-2">Receive & Respond</h3>
                 <p className="text-gray-700 dark:text-gray-300">
                   Receive honest feedback without knowing the sender's identity, fostering trust and openness.
-                      </p>
-                    </div>
+                </p>
+              </div>
             </div>
           </section>
 
           <section className="w-full px-4 py-16 bg-gray-50 dark:bg-black">
-          
-            <div className="mx-auto max-w-4xl space-y-12">              
-            <h1 className="text-6xl max-sm:text-4xl font-bold dark:text-white">Steps for getting started</h1>
+
+            <div className="mx-auto max-w-4xl space-y-12">
+              <h1 className="text-6xl max-sm:text-4xl font-bold dark:text-white">Steps for getting started</h1>
               {/* Step 1 */}
               <div className="flex flex-col md:flex-row items-start md:items-center">
                 <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white flex items-center justify-center rounded-full mb-4 md:mb-0">
@@ -190,7 +190,7 @@ export default function Page() {
                 </div>
               </div>
             </div>
-        </section>
+          </section>
 
 
           <section className="w-full max-w-4xl mb-16 px-4 md:px-0 mx-auto">
@@ -226,20 +226,20 @@ export default function Page() {
           <section className="w-full px-4 py-22 dark:text-white font-bold  text-center">
             <h2 className="text-4xl max-sm:text-4xl max-sm:py-4 font-semibold mb-4">Ready to get honest feedback?</h2>
             <Button
-                  size="lg"
-                  className="text-white font-semibold px-6 py-3 rounded-lg  shadow-lg"
-                  style={{
-                    background: "linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6)",
-                  }}                  
-                  aria-label="Get started with MysteryMessage"
-                >
-                  <Link href={"/sign-up"}>
-              Try MysteryMessage
+              size="lg"
+              className="text-white font-semibold px-6 py-3 rounded-lg  shadow-lg"
+              style={{
+                background: "linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6)",
+              }}
+              aria-label="Get started with MysteryMessage"
+            >
+              <Link href={"/sign-up"}>
+                Try MysteryMessage
               </Link>
             </Button>
           </section>
-        
-      </main>
+
+        </main>
       </div>
     </>
   );
