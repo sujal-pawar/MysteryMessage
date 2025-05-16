@@ -142,7 +142,7 @@ export default function Page() {
             </div>
           </section>
 
-          <section className="w-full px-4 py-16 bg-gray-50 dark:bg-black">
+          <section className="w-full px-4 py-16 dark:bg-black">
 
             <div className="mx-auto max-w-4xl space-y-12">
               <h1 className="text-6xl max-sm:text-4xl font-bold dark:text-white">Steps for getting started</h1>
