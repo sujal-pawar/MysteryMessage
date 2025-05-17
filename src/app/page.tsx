@@ -27,12 +27,12 @@ export default function Page() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className="pt-12 min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors">
+      <div className="pt-12 max-sm:pt-4 min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors">
         <main className="w-full flex flex-col items-center justify-center md:px-0">
           {/* Hero Section */}
-          <section className="text-center mb-12 max-w-4xl mx-auto">
+          <section className="text-center max-sm:px-4 mb-12 max-w-4xl mx-auto">
             <div style={{ marginTop: '2rem' }}>
-              <h1 className="text-6xl max-sm:text-4xl font-extrabold leading-tight">
+              <h1 className="text-6xl max-sm:text-5xl  font-extrabold leading-tight">
                 <DecryptedText
                   text="Dive into the World of Anonymous Feedback"
                   animateOn="view"
