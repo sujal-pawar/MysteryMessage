@@ -2,6 +2,8 @@
 
 import Link from "next/link"
 import { Github, Mail, Heart, Linkedin } from "lucide-react"
+import Image from "next/image"
+import logo from "../assets/logo.png"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -11,7 +13,10 @@ export function Footer() {
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">MysteryMessage</h3>
+            <div className="flex gap-2 justify-start mb-4 items-center">
+              <Image src={logo} alt="MysteryMessage Logo" width={35} height={35} />
+            <h3 className="text-lg font-semibold">MysteryMessage</h3>
+            </div>            
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Send anonymous messages to your friends and receive messages from others.
             </p>
