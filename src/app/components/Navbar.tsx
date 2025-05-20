@@ -1,6 +1,6 @@
 "use client"
 
-import { Menu, X, User as UserIcon } from 'lucide-react'
+import { Menu, X, User as UserIcon, Loader2 } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
 import React, { useState, useEffect } from 'react'
 import { Button } from './ui/button'
@@ -56,7 +56,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-3 ml-auto">
             <ThemeToggle />
             {status === 'loading' ? (
-              <span className="text-sm">Loading...</span>
+              <span className="text-sm"><Loader2/></span>
             ) : session ? (
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
@@ -109,11 +109,8 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden flex flex-col justify-center items-center pt-4 pb-2 px-2 space-y-4 border-t dark:border-gray-800 mt-4">
-
-
-
             {status === 'loading' ? (
-              <span className="block py-2 text-sm">Loading...</span>
+              <span className="block py-2 text-sm"><Loader2/></span>
             ) : session ? (
               <>
                 <div className="flex w-full flex-row justify-between gap-2 py-2">
